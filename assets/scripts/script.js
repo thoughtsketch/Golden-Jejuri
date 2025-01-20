@@ -141,10 +141,6 @@ function closeForm() {
   document.getElementById("popupOverlay").style.display = "none";
 }
 
-function closeThankYouPopup() {
-  document.getElementById("thankYouPopup").style.display = "none";
-}
-
 // Function to handle form submission
 document.getElementById("contactForm").addEventListener("submit", async function (event) {
   event.preventDefault(); // Prevent default form submission
@@ -160,34 +156,48 @@ document.getElementById("contactForm").addEventListener("submit", async function
   const mobile = document.getElementById("mobile").value;
 
   // Additional mandatory fields
-  const project = "Codename Jejuri";  // Fixed project name
-  const source = "Website";  // Fixed source value
+  const project = "Codename Golden Jejuri"; // Fixed project name
+  const source = "Website"; // Fixed source value
 
-  // Send data to API (JSONPlaceholder for testing)
-  const apiUrl = "https://glitz.apps.enrichr.co/public/companies/1dc9b9ef-c91a-4f4e-8cde-3020ed6747d2/leads-all"; // Demo API URL for testing
+  // Payload to send
   const payload = { name, email, mobile, project, source };
 
   try {
-    const response = await fetch(apiUrl, {
+    // Step 1: Send data to API
+    const apiUrl = "https://jsonplaceholder.typicode.com/posts"; // Demo API URL
+    const apiResponse = await fetch(apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
 
-    if (response.ok) {
-      const responseData = await response.json();
-      console.log("Response from API:", responseData); // Log the response to the console
-
-      formSubmitted = true; // Mark the form as submitted
-      document.getElementById("popupOverlay").style.display = "none"; // Hide the form
-      document.getElementById("thankYouPopup").style.display = "flex"; // Show Thank You popup
-    } else {
-      const errorData = await response.json();
-      alert(`Failed to submit the form: ${errorData.message || "Unknown error"}`);
+    if (!apiResponse.ok) {
+      throw new Error("Failed to submit data to API");
     }
+    const apiResult = await apiResponse.json();
+    console.log("Data sent to API successfully:", apiResult);
+
+    // Step 2: Send data to email via PHP backend
+    // const emailHandlerUrl = "./emailHandler.php"; // Update with correct PHP script path
+    // const emailResponse = await fetch(emailHandlerUrl, {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    //   body: new URLSearchParams(payload), // Convert JSON to URL-encoded string
+    // });
+
+    // if (!emailResponse.ok) {
+    //   const emailError = await emailResponse.json();
+    //   throw new Error(emailError.message || "Failed to send email");
+    // }
+    // const emailResult = await emailResponse.json();
+    // console.log("Email sent successfully:", emailResult.message);
+
+    // Step 3: Redirect to thank-you page
+    formSubmitted = true; // Mark the form as submitted
+    window.location.href = "thank-you.html"; // Redirect to thank-you page
   } catch (error) {
-    console.error("Error submitting form:", error);
-    alert("An error occurred while submitting the form. Please try again.");
+    console.error("Error during form submission:", error);
+    alert(`An error occurred: ${error.message}. Please try again.`);
   }
 });
 
@@ -216,6 +226,7 @@ document.getElementById("contactUsLink").addEventListener("click", function (eve
   event.preventDefault();
   document.getElementById("popupOverlay").style.display = "flex";
 });
+
 
 
 
