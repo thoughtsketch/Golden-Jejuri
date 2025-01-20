@@ -137,86 +137,87 @@ document.addEventListener('DOMContentLoaded', () => {
 // Function to close the form
 let formSubmitted = false;
 
-  function closeForm() {
-    document.getElementById("popupOverlay").style.display = "none";
+function closeForm() {
+  document.getElementById("popupOverlay").style.display = "none";
+}
+
+function closeThankYouPopup() {
+  document.getElementById("thankYouPopup").style.display = "none";
+}
+
+// Function to handle form submission
+document.getElementById("contactForm").addEventListener("submit", async function (event) {
+  event.preventDefault(); // Prevent default form submission
+
+  if (formSubmitted) {
+    alert("Form already submitted!");
+    return;
   }
 
-  // Function to handle form submission
-  document.getElementById("contactForm").addEventListener("submit", async function (event) {
-    event.preventDefault(); // Prevent default form submission
+  // Get form values
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const mobile = document.getElementById("mobile").value;
 
-    if (formSubmitted) {
-      alert("Form already submitted!");
-      return;
+  // Additional mandatory fields
+  const project = "Codename Jejuri";  // Fixed project name
+  const source = "Website";  // Fixed source value
+
+  // Send data to API (JSONPlaceholder for testing)
+  const apiUrl = "https://glitz.apps.enrichr.co/public/companies/1dc9b9ef-c91a-4f4e-8cde-3020ed6747d2/leads-all"; // Demo API URL for testing
+  const payload = { name, email, mobile, project, source };
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      const responseData = await response.json();
+      console.log("Response from API:", responseData); // Log the response to the console
+
+      formSubmitted = true; // Mark the form as submitted
+      document.getElementById("popupOverlay").style.display = "none"; // Hide the form
+      document.getElementById("thankYouPopup").style.display = "flex"; // Show Thank You popup
+    } else {
+      const errorData = await response.json();
+      alert(`Failed to submit the form: ${errorData.message || "Unknown error"}`);
     }
+  } catch (error) {
+    console.error("Error submitting form:", error);
+    alert("An error occurred while submitting the form. Please try again.");
+  }
+});
 
-    // Get form values
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const mobile = document.getElementById("mobile").value;
+// Show the form on page load
+window.onload = function () {
+  document.getElementById("popupOverlay").style.display = "flex"; // Automatically show form on page load
+};
 
-    // Additional mandatory fields
-    const project = "Codename Jejuri";  // Fixed project name
-    const source = "Website";  // Fixed source value
+// Add event listeners for buttons and links
+document.querySelector(".cta-button").addEventListener("click", function (event) {
+  event.preventDefault();
+  document.getElementById("popupOverlay").style.display = "flex";
+});
 
-    // Create a WhatsApp message URL
-    const message = `Name: ${name}%0AEmail: ${email}%0AMobile: ${mobile}`;
-    const waUrl = `https://wa.me/+919742069669?text=${message}`;
+document.querySelector(".btn").addEventListener("click", function (event) {
+  event.preventDefault();
+  document.getElementById("popupOverlay").style.display = "flex";
+});
 
-    // Send data to API (JSONPlaceholder for testing)
-    const apiUrl = "https://glitz.apps.enrichr.co/public/companies/1dc9b9ef-c91a-4f4e-8cde-3020ed6747d2/leads-all"; // Demo API URL for testing
-    const payload = { name, email, mobile, project, source };
+document.querySelector(".investment-appointment-button").addEventListener("click", function (event) {
+  event.preventDefault();
+  document.getElementById("popupOverlay").style.display = "flex";
+});
 
-    try {
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+document.getElementById("contactUsLink").addEventListener("click", function (event) {
+  event.preventDefault();
+  document.getElementById("popupOverlay").style.display = "flex";
+});
 
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log("Response from API:", responseData); // Log the response to the console
 
-        alert("Form submitted successfully!");
-        formSubmitted = true; // Mark the form as submitted
-        window.open(waUrl, "_blank"); // Open WhatsApp with the message
-        closeForm(); // Close the form
-      } else {
-        const errorData = await response.json();
-        alert(`Failed to submit the form: ${errorData.message || "Unknown error"}`);
-      }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("An error occurred while submitting the form. Please try again.");
-    }
-  });
-
-  // Show the form on page load
-  window.onload = function () {
-    document.getElementById("popupOverlay").style.display = "flex"; // Automatically show form on page load
-  };
-
-  // Add event listeners for buttons and links
-  document.querySelector(".cta-button").addEventListener("click", function (event) {
-    event.preventDefault();
-    document.getElementById("popupOverlay").style.display = "flex";
-  });
-
-  document.querySelector(".btn").addEventListener("click", function (event) {
-    event.preventDefault();
-    document.getElementById("popupOverlay").style.display = "flex";
-  });
-
-  document.querySelector(".investment-appointment-button").addEventListener("click", function (event) {
-    event.preventDefault();
-    document.getElementById("popupOverlay").style.display = "flex";
-  });
-
-  document.getElementById("contactUsLink").addEventListener("click", function (event) {
-    event.preventDefault();
-    document.getElementById("popupOverlay").style.display = "flex";
-  }); 
 
   
   
