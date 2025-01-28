@@ -225,7 +225,7 @@ const payload = { name, email, phone, project, source };
 
 try {
   // Step 1: Send data to API
-  const apiUrl = "https://glitz.apps.enrichr.co/public/companies/1dc9b9ef-c91a-4f4e-8cde-3020ed6747d2/leads-all"; // Demo API URL
+  const apiUrl = "https://maestro-realtek.turbo.8ease.co/public/companies/1dc9b9ef-c91a-4f4e-8cde-3020ed6747d2/leads-all"; // Demo API URL
   const apiResponse = await fetch(apiUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
